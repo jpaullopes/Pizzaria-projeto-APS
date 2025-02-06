@@ -1,0 +1,144 @@
+<!-- frontend/pedidos.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar Pedido - Pizzaria</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Registrar Pedido</h2>
+  <form id="pedidoForm">
+    <fieldset>
+      <legend>Dados do Cliente</legend>
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" required>
+      <br>
+      <label for="telefone">Telefone:</label>
+      <input type="text" id="telefone" name="telefone" placeholder="(XX) XXXX-XXXX" required>
+      <br>
+      <label for="endereco">Endereço:</label>
+      <input type="text" id="endereco" name="endereco" required>
+    </fieldset>
+    
+    <fieldset id="pizzasFieldset">
+      <legend>Pizzas</legend>
+      <!-- Bloco de pizza -->
+      <div class="pizza">
+        <label for="tamanho1">Tamanho:</label>
+        <select class="tamanho" id="tamanho1">
+          <option value="Média">Média</option>
+          <option value="Grande">Grande</option>
+          <option value="Gigante">Gigante</option>
+        </select>
+        <label for="sabor1">Sabor:</label>
+        <select class="sabor" id="sabor1" required>
+          <!-- As opções serão preenchidas via JavaScript -->
+        </select>
+      </div>
+    </fieldset>
+    
+    <button type="button" id="addPizza">Adicionar outra pizza</button>
+    <br><br>
+    <button type="submit">Enviar Pedido</button>
+  </form>
+
+  <script src="app.js"></script>
+  <script>
+    // Função para buscar sabores do backend
+    async function carregarSabores() {
+      try {
+        const response = await fetch('http://localhost:3000/sabores');
+        const sabores = await response.json();
+        return sabores;
+      } catch (error) {
+        console.error('Erro ao carregar sabores:', error);
+        return [];
+      }
+    }
+
+    // Função para preencher um dropdown de sabores
+    async function preencherSabores(selectElement) {
+      const sabores = await carregarSabores();
+      selectElement.innerHTML = '';
+      sabores.forEach(sabor => {
+        const option = document.createElement('option');
+        option.value = sabor.id; // envia o ID para o backend
+        option.textContent = `${sabor.nome} (Adicional R$${sabor.adicional})`;
+        selectElement.appendChild(option);
+      });
+    }
+
+    // Preencher o primeiro dropdown ao carregar a página
+    document.addEventListener('DOMContentLoaded', async () => {
+      const primeiroSelect = document.getElementById('sabor1');
+      await preencherSabores(primeiroSelect);
+    });
+
+    // Adicionar novo bloco de pizza
+    document.getElementById('addPizza').addEventListener('click', async () => {
+      const pizzasFieldset = document.getElementById('pizzasFieldset');
+      const div = document.createElement('div');
+      div.className = 'pizza';
+      const pizzaCount = document.querySelectorAll('.pizza').length + 1;
+      div.innerHTML = `
+        <label for="tamanho${pizzaCount}">Tamanho:</label>
+        <select class="tamanho" id="tamanho${pizzaCount}">
+          <option value="Média">Média</option>
+          <option value="Grande">Grande</option>
+          <option value="Gigante">Gigante</option>
+        </select>
+        <label for="sabor${pizzaCount}">Sabor:</label>
+        <select class="sabor" id="sabor${pizzaCount}" required></select>
+      `;
+      pizzasFieldset.appendChild(div);
+      const novoSelect = document.getElementById(`sabor${pizzaCount}`);
+      await preencherSabores(novoSelect);
+    });
+
+    // Envio do formulário de pedido
+    document.getElementById('pedidoForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const cliente = {
+        nome: document.getElementById('nome').value,
+        telefone: document.getElementById('telefone').value,
+        endereco: document.getElementById('endereco').value
+      };
+
+      // Validação do formato de telefone: (XX) XXXX-XXXX
+      const telefoneRegex = /^\(\d{2}\)\s?\d{4}-\d{4}$/;
+      if (!telefoneRegex.test(cliente.telefone)) {
+        alert('Telefone deve estar no formato (XX) XXXX-XXXX');
+        return;
+      }
+      
+      const pizzasElements = document.querySelectorAll('.pizza');
+      const pizzas = [];
+      pizzasElements.forEach(pizzaEl => {
+        const tamanho = pizzaEl.querySelector('.tamanho').value;
+        const saborId = parseInt(pizzaEl.querySelector('.sabor').value);
+        pizzas.push({ tamanho, saborId });
+      });
+      
+      try {
+        const response = await fetch('http://localhost:3000/pedidos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cliente, pizzas })
+        });
+        const result = await response.json();
+        if(result.success) {
+          // Armazena os detalhes do pedido para a tela de resumo
+          localStorage.setItem('pedidoRegistrado', JSON.stringify(result.pedido));
+          window.location.href = 'pedidoRegistrado.html';
+        } else {
+          alert(result.message);
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Erro ao enviar pedido.');
+      }
+    });
+  </script>
+</body>
+</html>

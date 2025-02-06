@@ -1,0 +1,35 @@
+<!-- frontend/pedidoRegistrado.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pedido Registrado - Pizzaria</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Pedido Registrado</h2>
+  <div id="pedidoResumo">
+    <!-- Os detalhes do pedido serão exibidos aqui -->
+  </div>
+  <button onclick="window.location.href='pedidos.html'">Novo Pedido</button>
+
+  <script>
+    const pedido = JSON.parse(localStorage.getItem('pedidoRegistrado'));
+    if(pedido) {
+      const resumoDiv = document.getElementById('pedidoResumo');
+      resumoDiv.innerHTML = `
+        <p><strong>ID do Pedido:</strong> ${pedido.id}</p>
+        <p><strong>Cliente:</strong> ${pedido.cliente}</p>
+        <p><strong>Total:</strong> R$ ${pedido.total.toFixed(2)}</p>
+        <p><strong>Tempo Estimado de Entrega:</strong> ${pedido.tempoEntrega} minutos</p>
+        <h3>Pizzas:</h3>
+        <ul>
+          ${pedido.pizzas.map(p => `<li>${p.tamanho} - ${p.sabor}: R$ ${p.preco.toFixed(2)}</li>`).join('')}
+        </ul>
+      `;
+    } else {
+      document.getElementById('pedidoResumo').textContent = 'Nenhum pedido encontrado.';
+    }
+  </script>
+</body>
+</html>

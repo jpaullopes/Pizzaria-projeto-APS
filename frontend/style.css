@@ -1,0 +1,77 @@
+/* frontend/style.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+form {
+  max-width: 500px;
+  margin: auto;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+fieldset {
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+label {
+  display: inline-block;
+  width: 150px;
+  margin-bottom: 5px;
+}
+
+input, select {
+  width: calc(100% - 160px);
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+  width: auto;      /* Permite que o checkbox tenha seu tamanho padrão */
+  display: inline-block;  /* Garante que ele seja exibido corretamente */
+  margin-right: 5px;      /* Um pequeno espaçamento, se desejar */
+}
+
+button {
+  padding: 8px 15px;
+  margin-top: 10px;
+}
+
+/* Estilos para o modal dos Termos de Serviço */
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%;
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover, .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
