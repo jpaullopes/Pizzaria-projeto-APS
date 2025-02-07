@@ -160,5 +160,11 @@ Para rodar as páginas do frontend de forma correta:
   - Implementação de HTTPS
 
 ---
+## Documentações
+ - [Diagrama de sequencia](https://docs.google.com/document/d/1l91epVtIt7gaC2PItoD7H-BGxQzBplDHC2bsVMf5IYs/edit?usp=sharing)
+ - [Documentação dos casos de usos](https://docs.google.com/document/d/1puHmHKXi3jHQHSxWTIXoRpclDEl1bZUWz1KVe15OZX8/edit?usp=sharing)
+ - [Diagrama de classe](https://docs.google.com/document/d/1f18eVMG7EUdOFY-alDw-MchOwC1cCSIRw_0GXJU-N8w/edit?usp=sharing)
+ - [Diagrama UML de caso de uso](https://docs.google.com/document/d/1BFrdu5KlU7eot08LU_WUbXuS0rOxcMQ2gFIOdNZi-Us/edit?usp=sharing)
+---
 
 Esperamos que este README forneça todas as informações necessárias para utilizar o projeto com sucesso! 🚀
